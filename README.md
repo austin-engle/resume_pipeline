@@ -4,24 +4,36 @@ This codebase will deploy my resume to an s3 bucket hosted by Cloudfront. The we
 
 
 ## TODO
-- Create Website (HTML, CSS, Javascript)
-      - HTML & CSS Resume
-      - Javscript Counter
-          - Should call API Gateway to get 
+* Create Website (HTML, CSS, Javascript)
+      * HTML & CSS Resume
+      * Javscript Counter
+          * Should call API Gateway to get 
           
-- Create Infrastructure
-      - DynamoDB
-      - S3 Bucket
-      - API Gateway
-      - Lambda
-          - Read the current number, increment it by 1, write new number to dynamo, return number to webpage
-          - Going to need to include tests for my lambda (Unit Tests?)
-      - Cloudfront
-      - IAM Policies for everything
+* Create Infrastructure
+      * API Gateway
+      * Lambda
+          * Read the current number, increment it by 1, write new number to dynamo, return number to webpage
+          * Going to need to include tests for my lambda (Unit Tests?)
+      * IAM Policies for everything
       
-- Create Pipeline for website
-      - Pipeline should take website files and upload them to s3
+* Create Pipeline for website
+      * Pipeline should take website files and upload them to s3
       
-- Create Pipeline for Lambda Functions (?) (If I have time)
+* Create Pipeline for Lambda Functions (?) (If I have time)
 
-- Set up Route53 to point to CloudFront
+* Set up Route53 to point to CloudFront
+
+
+## Completed
+* Create Infrastructure
+      * DynamoDB
+      * S3 Bucket
+      * Cloudfront
+
+
+## Deployment Steps
+* zip lambda code
+* Deploy frontend-infrastructure
+* upload all code to s3 bucket
+* deploy backend infrastructure
+* Profit

@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Infrastructure for CloudFront hosted website
+
+Resources:
+  ##########################
+  ## DynamoDB Table Start ##
+  ##########################
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Webpage-view-count-test
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "Who"
+          AttributeType: "S"
+        - AttributeName: "Website"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: Who
+          KeyType: HASH
+        - AttributeName: Website
+          KeyType: RANGE
+
+  ########################
+  ## DynamoDB Table End ##
+  ########################
+
+  ##########################
+  ## First Function Start ##
+  ##########################
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+
+  LambdaPolicy:
+    DependsOn: DynamoDBTable
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+        - !Ref LambdaRole
+      PolicyName: "JITInitStateLambdaIAMRole-Jit2"
+      PolicyDocument:
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:PutItem
+            Resource: !GetAtt DynamoDBTable.Arn
+            # Base Execution Role
+          - Effect: "Allow"
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "*"
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Read and Write website count from DynamoDB
+      FunctionName: ViewCount
+      Handler: lambda.handler
+      Environment:
+        Variables:
+          "TABLE_NAME": !Ref DynamoDBTable
+      MemorySize: 128
+      Timeout: 70
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: python3.7
+      Code:
+        S3Bucket: austinengle-resume-s3
+        S3Key: infrastructure/lambda/1.0/lambda.zip
+  ########################
+  ## First Function End ##
+  ########################
