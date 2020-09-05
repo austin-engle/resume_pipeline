@@ -1,4 +1,31 @@
 body {
     background-color: whitesmoke;
+    font-size: 125%;
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 1em
   }
 
+header {
+  /* align-content: center; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.margin_0 {
+  margin: 0;
+}
+
+
+#cert_list{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-count: 3;
+  justify-content: center;
+}
+
+#cert_list li{
+  width: 33%;
+}

@@ -47,7 +47,7 @@ Resources:
     Properties:
       Roles:
         - !Ref LambdaRole
-      PolicyName: "JITInitStateLambdaIAMRole-Jit2"
+      PolicyName: "LambdaIAMRole"
       PolicyDocument:
         Statement:
           - Effect: "Allow"
