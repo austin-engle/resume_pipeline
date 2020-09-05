@@ -1,5 +1,3 @@
-# Untitled
-
 # resume_pipeline
 
 This codebase will deploy my resume to an s3 bucket hosted by Cloudfront. The website will have a visitor counter which will communicate with a DynamoDB Database to keep track of the visitor number. All of this will be deployed via a webhook and automated.
@@ -14,11 +12,14 @@ This codebase will deploy my resume to an s3 bucket hosted by Cloudfront. The we
     - API Gateway
     - Lambda
         - Going to need to include tests for my lambda (Unit Tests?)
+- Set up Route53 to point to CloudFront
+
+### Optional
 - Create Pipeline for website
     - Pipeline should take website files and upload them to s3
 
 - Create Pipeline for Lambda Functions (?) (If I have time)
-- Set up Route53 to point to CloudFront
+
 
 ## Completed
 
