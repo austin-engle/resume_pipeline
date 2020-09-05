@@ -4,6 +4,7 @@ const sendHttpRequest = (method, url) => {
         xhr.responseType = 'json';
 
         xhr.open(method, url);
+        // xhr.setRequestHeader('Access-Control-Allow-Origin', '*')
 
         xhr.onload = () => {
             resolve(xhr.response);
@@ -18,7 +19,7 @@ const sendHttpRequest = (method, url) => {
 
 const getData = () => {
     // https://www.youtube.com/watch?v=4K33w-0-p2c
-    sendHttpRequest('GET', 'https://edp6a47m2d.execute-api.us-west-2.amazonaws.com/development/viewcount')
+    sendHttpRequest('GET', 'https://kpchvq2a30.execute-api.us-west-2.amazonaws.com/prod/states')
         .then(responseData => {
             console.log(responseData)
             let count_element = document.getElementById('counter');

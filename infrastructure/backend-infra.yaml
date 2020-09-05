@@ -83,3 +83,110 @@ Resources:
   ########################
   ## First Function End ##
   ########################
+
+  #######################
+  ## API Gateway Start ##
+  #######################
+  RestAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: API for ViewCount
+      Name: ViewCount
+
+  StatesResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestAPI.RootResourceId
+      PathPart: states
+      RestApiId: !Ref RestAPI
+
+  StatesGetMethod:
+    DependsOn: StatesGetMethodAPILambdaExecution
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+          StatusCode: "200"
+      Integration:
+        IntegrationHttpMethod: GET
+        Type: AWS
+        Credentials: !GetAtt StatesGetMethodAPILambdaExecution.Arn # This is giving an error, have to remove it in the console and readd for it to work. Not sure why
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+      ResourceId: !Ref StatesResource
+      RestApiId: !Ref RestAPI
+
+  StatesGetMethodAPILambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "apigateway.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "StatesGetMethodAPILambdaExecution"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - lambda:*
+                Resource: !GetAtt LambdaFunction.Arn
+
+  StatesOptionsMethod:
+    DependsOn: StatesGetMethodAPILambdaExecution
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      ResourceId: !Ref StatesResource
+      RestApiId: !Ref RestAPI
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ""
+            StatusCode: "200"
+        PassthroughBehavior: NEVER
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+          StatusCode: "200"
+
+  ApiGatewayDeployment:
+    DependsOn:
+      - StatesOptionsMethod
+      - StatesGetMethod
+      - StatesGetMethodAPILambdaExecution
+      - RestAPI
+      - StatesResource
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref RestAPI
+      Description: Deployment for Viewcount
+      StageName: prod
+  ######################
+  ## API Gateway  End ##
+  ######################

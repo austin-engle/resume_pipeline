@@ -19,6 +19,7 @@ def query_dynamo(table_name):
     )
     # make sure we get at least 1 back
     value = response["Count"]
+    print(f"This is the value: {value}")
 
     if value != 0:
         viewcount = response["Items"][0]["viewcount"]["N"]
@@ -26,7 +27,7 @@ def query_dynamo(table_name):
         return viewcount
 
     else:
-        return None
+        raise ValueError("Unable to find data in database")
 
 
 def insert_website_data(table_name, view_count):
