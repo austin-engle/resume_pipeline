@@ -32,7 +32,7 @@ This codebase will deploy my resume to an s3 bucket hosted by Cloudfront. The we
 
 ## Deployment Steps
 
-- zip lambda code
+- zip lambda code (if any changes were made)
 - Deploy frontend-infrastructure
 - upload all code to s3 bucket
 - deploy backend infrastructure
