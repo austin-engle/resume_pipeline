@@ -27,8 +27,11 @@ This codebase will deploy my resume to an s3 bucket hosted by Cloudfront. The we
 
 - zip lambda code (if any changes were made)
 - Deploy frontend-infrastructure
-- upload all code to s3 bucket
+- upload lambda code to s3 bucket
 - deploy backend infrastructure
+- Update API url in the Javascript for the front-end
+- Upload all website data to s3 bucket
+- Invalidate CloudFront to pull new files from s3 bucket
 - Profit
 
 ## Bugs
